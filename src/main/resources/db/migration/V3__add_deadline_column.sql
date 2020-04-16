@@ -1,0 +1,1 @@
+alter table medications add column deadline datetime null;
