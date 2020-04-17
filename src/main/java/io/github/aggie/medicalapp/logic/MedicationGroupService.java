@@ -4,12 +4,10 @@ import io.github.aggie.medicalapp.model.MedicationGroupRepository;
 import io.github.aggie.medicalapp.model.MedicationRepository;
 import io.github.aggie.medicalapp.model.projection.GroupReadModel;
 import io.github.aggie.medicalapp.model.projection.GroupWriteModel;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 public class MedicationGroupService {
 
     private MedicationGroupRepository repository;

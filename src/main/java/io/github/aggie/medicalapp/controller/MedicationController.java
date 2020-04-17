@@ -54,15 +54,15 @@ class MedicationController {
         }
         repository.findById(id)
                 .ifPresent(medication -> {
-                        medication.updateFrom(toUpdate);
-                        repository.save(medication);
+                    medication.updateFrom(toUpdate);
+                    repository.save(medication);
                 });
         return ResponseEntity.noContent().build();
     }
 
     @Transactional
     @PatchMapping("/medications/{id}")
-    public ResponseEntity<?> toogleMedication(@PathVariable int id) {
+    public ResponseEntity<?> toggleMedication(@PathVariable int id) {
 
         if (!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
