@@ -45,7 +45,6 @@ class TemplateServiceTest {
         var mockRepository = mock(TemplateRepository.class);
         when(mockRepository.findById(anyInt())).thenReturn(Optional.empty());
         // and
-
         var mockConfig = configurationReturning(true);
         // system under test
         var toTest = new TemplateService(mockRepository, null, mockConfig);
@@ -59,32 +58,8 @@ class TemplateServiceTest {
                 .hasMessageContaining("id not found");
     }
 
-    @Test
-    @DisplayName("should throw IllegalArgumentException when configured to allow just 1 group and no groups and no projects for a given id")
-    void createGroup_noMultipleGroupsConfig_And_noUndoneGroupExists_noProjects_throwsIllegalArgumentException() {
-        // given
-        var mockRepository = mock(TemplateRepository.class);
-        when(mockRepository.findById(anyInt())).thenReturn(Optional.empty());
-        // and
-        MedicationGroupRepository mockGroupRepository = groupRepositoryReturning(false);
-        // and
-
-        var mockConfig = configurationReturning(true);
-        // system under test
-        var toTest = new TemplateService(mockRepository, mockGroupRepository, mockConfig);
-
-        // when
-        var exception = catchThrowable(() -> toTest.createGroup(LocalDateTime.now(), 0));
-
-        // then
-        assertThat(exception)
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("id not found");
-    }
-
-    @Test
+    @Test // happy path
     @DisplayName("should create a new group from project")
-        // happy path
     void createGroup_configurationOk_existingProject_createsAndSavesGroup() {
         // given
         var today = LocalDate.now().atStartOfDay(); // polnoc, godzina zero
@@ -105,11 +80,32 @@ class TemplateServiceTest {
         GroupReadModel result = toTest.createGroup(today, 1);
 
         // then
-//        assertThat(result).hasFieldOrPropertyWithValue("description", "example");
         assertThat(result.getName()).isEqualTo("example");
         assertThat(result.getDeadline()).isEqualTo(today.minusDays(1));
         assertThat(result.getMedications()).allMatch(medication -> medication.getName().equals("desc"));
         assertThat(countBeforeCall + 1).isNotEqualTo(inMemoryGroupRepo.count());
+    }
+
+    @Test
+    @DisplayName("should throw IllegalArgumentException when configured to allow just 1 group and no groups and no projects for a given id")
+    void createGroup_noMultipleGroupsConfig_And_noUndoneGroupExists_noProjects_throwsIllegalArgumentException() {
+        // given
+        var mockRepository = mock(TemplateRepository.class);
+        when(mockRepository.findById(anyInt())).thenReturn(Optional.empty());
+        // and
+        MedicationGroupRepository mockGroupRepository = groupRepositoryReturning(false);
+        // and
+        var mockConfig = configurationReturning(true);
+        // system under test
+        var toTest = new TemplateService(mockRepository, mockGroupRepository, mockConfig);
+
+        // when
+        var exception = catchThrowable(() -> toTest.createGroup(LocalDateTime.now(), 0));
+
+        // then
+        assertThat(exception)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("id not found");
     }
 
     private Template templateWith(String templateDescription, Set<Integer> daysToDeadline) {
@@ -123,7 +119,6 @@ class TemplateServiceTest {
             .collect(Collectors.toSet());
         var result = mock(Template.class);
         when(result.getDescription()).thenReturn(templateDescription);
-
         when(result.getSteps()).thenReturn(steps);
         return result;
     }
@@ -131,7 +126,6 @@ class TemplateServiceTest {
     private MedicationGroupRepository groupRepositoryReturning(final boolean result) {
         var mockGroupRepository = mock(MedicationGroupRepository.class);
         when(mockGroupRepository.existsByDiscountIsFalseAndTemplate_Id(anyInt())).thenReturn(result);
-        // and
         return mockGroupRepository;
     }
 

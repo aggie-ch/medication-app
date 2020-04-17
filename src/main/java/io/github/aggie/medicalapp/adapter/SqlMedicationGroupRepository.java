@@ -11,7 +11,6 @@ import java.util.List;
 
 @Repository
 interface SqlMedicationGroupRepository extends MedicationGroupRepository, JpaRepository<MedicationGroup, Integer> {
-
     @Override
     @Query(nativeQuery = true, value = "SELECT count(*) > 0 FROM medications WHERE id=:id")
     boolean existsById(@Param("id") Integer id);

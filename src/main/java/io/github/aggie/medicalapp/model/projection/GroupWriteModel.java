@@ -9,7 +9,6 @@ public class GroupWriteModel {
     private String name;
     private Set<GroupMedicationWriteModel> medications;
 
-
     public String getName() {
         return name;
     }

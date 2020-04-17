@@ -63,12 +63,10 @@ class MedicationController {
     @Transactional
     @PatchMapping("/medications/{id}")
     public ResponseEntity<?> toggleMedication(@PathVariable int id) {
-
         if (!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        repository.findById(id)
-                .ifPresent(m -> m.setDiscount(!m.isDiscount()));
+        repository.findById(id).ifPresent(m -> m.setDiscount(!m.isDiscount()));
 
         return ResponseEntity.noContent().build();
     }

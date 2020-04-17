@@ -9,11 +9,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MedicationGroupService {
-
     private MedicationGroupRepository repository;
     private MedicationRepository medicationRepository;
 
-    public MedicationGroupService(final MedicationGroupRepository repository, MedicationRepository medicationRepository) {
+    public MedicationGroupService(MedicationGroupRepository repository, MedicationRepository medicationRepository) {
         this.repository = repository;
         this.medicationRepository = medicationRepository;
     }
