@@ -27,7 +27,7 @@ class TemplateServiceTest {
         // and
         var mockConfig = configurationReturning(false);
         // system under test
-        var toTest = new TemplateService(null, mockGroupRepository, mockConfig);
+        var toTest = new TemplateService(null, mockGroupRepository, null, mockConfig);
 
         // when
         var exception = catchThrowable(() -> toTest.createGroup(LocalDateTime.now(), 0));
@@ -47,7 +47,7 @@ class TemplateServiceTest {
         // and
         var mockConfig = configurationReturning(true);
         // system under test
-        var toTest = new TemplateService(mockRepository, null, mockConfig);
+        var toTest = new TemplateService(mockRepository, null, null, mockConfig);
 
         // when
         var exception = catchThrowable(() -> toTest.createGroup(LocalDateTime.now(), 0));
@@ -62,7 +62,7 @@ class TemplateServiceTest {
     @DisplayName("should create a new group from project")
     void createGroup_configurationOk_existingProject_createsAndSavesGroup() {
         // given
-        var today = LocalDate.now().atStartOfDay(); // polnoc, godzina zero
+        var today = LocalDate.now().atStartOfDay();
         // and
         var template = templateWith("example", Set.of(-1, -2));
         var mockRepository = mock(TemplateRepository.class);
@@ -70,11 +70,12 @@ class TemplateServiceTest {
                 .thenReturn(Optional.of(template));
         // and
         InMemoryGroupRepository inMemoryGroupRepo = inMemoryGroupRepository();
+        var serviceWithInMemRepo = dummyGroupService(inMemoryGroupRepo);
         int countBeforeCall = inMemoryGroupRepo.count();
         // and
         var mockConfig = configurationReturning(true);
         // system under test
-        var toTest = new TemplateService(mockRepository, inMemoryGroupRepo, mockConfig);
+        var toTest = new TemplateService(mockRepository, inMemoryGroupRepo, serviceWithInMemRepo, mockConfig);
 
         // when
         GroupReadModel result = toTest.createGroup(today, 1);
@@ -97,7 +98,7 @@ class TemplateServiceTest {
         // and
         var mockConfig = configurationReturning(true);
         // system under test
-        var toTest = new TemplateService(mockRepository, mockGroupRepository, mockConfig);
+        var toTest = new TemplateService(mockRepository, mockGroupRepository, null, mockConfig);
 
         // when
         var exception = catchThrowable(() -> toTest.createGroup(LocalDateTime.now(), 0));
@@ -106,6 +107,10 @@ class TemplateServiceTest {
         assertThat(exception)
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("id not found");
+    }
+
+    private MedicationGroupService dummyGroupService(final InMemoryGroupRepository inMemoryGroupRepo) {
+        return new MedicationGroupService(inMemoryGroupRepo, null);
     }
 
     private Template templateWith(String templateDescription, Set<Integer> daysToDeadline) {

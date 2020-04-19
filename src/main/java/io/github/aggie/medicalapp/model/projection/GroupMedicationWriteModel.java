@@ -1,6 +1,7 @@
 package io.github.aggie.medicalapp.model.projection;
 
 import io.github.aggie.medicalapp.model.Medication;
+import io.github.aggie.medicalapp.model.MedicationGroup;
 
 import java.time.LocalDateTime;
 
@@ -24,7 +25,7 @@ public class GroupMedicationWriteModel {
         this.deadline = deadline;
     }
 
-    public Medication toMedication() {
-        return new Medication(name, deadline);
+    public Medication toMedication(final MedicationGroup group) {
+        return new Medication(name, deadline, group);
     }
 }

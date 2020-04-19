@@ -1,8 +1,12 @@
 package io.github.aggie.medicalapp.logic;
 
 import io.github.aggie.medicalapp.MedicationConfigurationProperties;
-import io.github.aggie.medicalapp.model.*;
+import io.github.aggie.medicalapp.model.MedicationGroupRepository;
+import io.github.aggie.medicalapp.model.Template;
+import io.github.aggie.medicalapp.model.TemplateRepository;
+import io.github.aggie.medicalapp.model.projection.GroupMedicationWriteModel;
 import io.github.aggie.medicalapp.model.projection.GroupReadModel;
+import io.github.aggie.medicalapp.model.projection.GroupWriteModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,10 +16,12 @@ public class TemplateService {
     private TemplateRepository repository;
     private MedicationGroupRepository medicationGroupRepository;
     private MedicationConfigurationProperties config;
+    private MedicationGroupService medicationGroupService;
 
-    public TemplateService(TemplateRepository repository, MedicationGroupRepository medicationGroupRepository, MedicationConfigurationProperties config) {
+    public TemplateService(TemplateRepository repository, MedicationGroupRepository medicationGroupRepository, MedicationGroupService medicationGroupService, MedicationConfigurationProperties config) {
         this.repository = repository;
         this.medicationGroupRepository = medicationGroupRepository;
+        this.medicationGroupService = medicationGroupService;
         this.config = config;
     }
 
@@ -32,20 +38,21 @@ public class TemplateService {
                 medicationGroupRepository.existsByDiscountIsFalseAndTemplate_Id(templateId)) {
             throw new IllegalStateException("Only one undone group from template is allowed");
         }
-        MedicationGroup result = repository.findById(templateId)
+        return repository.findById(templateId)
                 .map(template -> {
-                    var group = new MedicationGroup();
+                    var group = new GroupWriteModel();
                     group.setName(template.getDescription());
                     group.setMedications(
                             template.getSteps().stream()
-                                    .map(templateStep -> new Medication(
-                                            templateStep.getDescription(),
-                                            deadline.plusDays(templateStep.getDaysToDeadline()))
+                                    .map(templateStep -> {
+                                                var medication = new GroupMedicationWriteModel();
+                                                medication.setName(templateStep.getDescription());
+                                                medication.setDeadline(deadline.plusDays(templateStep.getDaysToDeadline()));
+                                                return medication;
+                                            }
                                     ).collect(Collectors.toSet())
                     );
-                    group.setTemplate(template);
-                    return medicationGroupRepository.save(group);
+                    return medicationGroupService.createGroup(group);
                 }).orElseThrow(() -> new IllegalArgumentException("Template with given id not found"));
-        return new GroupReadModel(result);
     }
 }

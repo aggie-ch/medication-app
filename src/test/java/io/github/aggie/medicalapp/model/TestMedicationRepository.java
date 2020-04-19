@@ -3,6 +3,7 @@ package io.github.aggie.medicalapp.model;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class TestMedicationRepository implements MedicationRepository {
@@ -35,7 +36,18 @@ public class TestMedicationRepository implements MedicationRepository {
 
     @Override
     public Medication save(Medication entity) {
-        return medications.put(medications.size() + 1, entity);
+        int key = medications.size() + 1;
+        Field field = null;
+        try {
+            field = Medication.class.getDeclaredField("id");
+            field.setAccessible(true);
+            field.set(entity, key);
+
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        medications.put(key, entity);
+        return medications.get(key);
     }
 
     @Override

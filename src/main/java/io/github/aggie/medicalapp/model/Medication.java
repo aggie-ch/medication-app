@@ -25,8 +25,15 @@ public class Medication {
     }
 
     public Medication(String name, LocalDateTime deadline) {
+        this(name, deadline, null);
+    }
+
+    public Medication(String name, LocalDateTime deadline, MedicationGroup group) {
         this.name = name;
         this.deadline = deadline;
+        if (group != null) {
+            this.group = group;
+        }
     }
 
     public int getId() {

@@ -29,7 +29,7 @@ public class GroupWriteModel {
         var result = new MedicationGroup();
         result.setName(name);
         result.setMedications(medications.stream()
-                .map(GroupMedicationWriteModel::toMedication)
+                .map(source -> source.toMedication(result))
                 .collect(Collectors.toSet())
         );
         return result;

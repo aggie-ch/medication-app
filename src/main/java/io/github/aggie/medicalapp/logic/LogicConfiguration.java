@@ -12,8 +12,9 @@ public class LogicConfiguration {
     @Bean
     TemplateService templateService(final TemplateRepository repository,
                                     final MedicationGroupRepository medicationGroupRepository,
+                                    final MedicationGroupService medicationGroupService,
                                     final MedicationConfigurationProperties config) {
-        return new TemplateService(repository, medicationGroupRepository, config);
+        return new TemplateService(repository, medicationGroupRepository, medicationGroupService, config);
     }
 
     @Bean
