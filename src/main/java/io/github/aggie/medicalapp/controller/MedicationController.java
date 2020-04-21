@@ -28,7 +28,7 @@ class MedicationController {
     }
 
     @GetMapping(params = {"!sort", "!page", "!size"})
-    CompletableFuture<ResponseEntity<List<Medication>>> readAllMedications() {
+    public CompletableFuture<ResponseEntity<List<Medication>>> readAllMedications() {
         logger.warn("Exposing all the medications");
         return service.findAllAsync().thenApply(ResponseEntity::ok);
     }
@@ -52,13 +52,13 @@ class MedicationController {
     }
 
     @PostMapping
-    ResponseEntity<Medication> createMedication(@RequestBody @Valid Medication toCreate) {
+    public ResponseEntity<Medication> createMedication(@RequestBody @Valid Medication toCreate) {
         var medication = repository.save(toCreate);
         return ResponseEntity.created(URI.create("/" + medication.getId())).body(medication);
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<?> updateMedication(@PathVariable int id, @RequestBody @Valid Medication toUpdate) {
+    public ResponseEntity<?> updateMedication(@PathVariable int id, @RequestBody @Valid Medication toUpdate) {
         if (!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

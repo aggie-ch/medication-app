@@ -7,11 +7,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class GroupReadModel {
+    private int id;
     private String name;
     private LocalDateTime deadline;
     private Set<GroupMedicationReadModel> medications;
 
     public GroupReadModel(MedicationGroup source) {
+        id = source.getId();
         name = source.getName();
         source.getMedications().stream()
                 .map(t -> t.getDeadline())
@@ -20,6 +22,14 @@ public class GroupReadModel {
         medications = source.getMedications().stream()
                 .map(GroupMedicationReadModel::new)
                 .collect(Collectors.toSet());
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

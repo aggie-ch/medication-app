@@ -18,12 +18,12 @@ public class InfoController {
     }
 
     @GetMapping("/url")
-    String url() {
+    public String url() {
         return datasource.getUrl();
     }
 
     @GetMapping("/prop")
-    boolean myProp() {
+    public boolean myProp() {
         return myProp.getTemplate().isAllowMultipleMedications();
     }
 }

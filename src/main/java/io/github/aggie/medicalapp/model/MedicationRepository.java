@@ -13,6 +13,8 @@ public interface MedicationRepository {
 
     Optional<Medication> findById(Integer id);
 
+    List<Medication> findByGroupId(Integer id);
+
     boolean existsById(Integer id);
 
     boolean existsByDiscountIsFalseAndGroup_Id(Integer id);

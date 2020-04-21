@@ -25,6 +25,11 @@ public class TestMedicationRepository implements MedicationRepository {
     }
 
     @Override
+    public List<Medication> findByGroupId(Integer id) {
+        return List.of();
+    }
+
+    @Override
     public boolean existsById(Integer id) {
         return medications.containsKey(id);
     }
