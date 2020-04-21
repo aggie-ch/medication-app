@@ -1,5 +1,6 @@
 package io.github.aggie.medicalapp.controller;
 
+import io.github.aggie.medicalapp.logic.MedicationService;
 import io.github.aggie.medicalapp.model.Medication;
 import io.github.aggie.medicalapp.model.MedicationRepository;
 import org.slf4j.Logger;
@@ -12,42 +13,51 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
+@RequestMapping("/medications")
 class MedicationController {
     private static final Logger logger = LoggerFactory.getLogger(MedicationController.class);
     private final MedicationRepository repository;
+    private final MedicationService service;
 
-    MedicationController(MedicationRepository repository) {
+    MedicationController(MedicationRepository repository, MedicationService service) {
         this.repository = repository;
+        this.service = service;
     }
 
-    @GetMapping(value = "/medications", params = {"!sort", "!page", "!size"})
-    ResponseEntity<List<Medication>> readAllMedications() {
+    @GetMapping(params = {"!sort", "!page", "!size"})
+    CompletableFuture<ResponseEntity<List<Medication>>> readAllMedications() {
         logger.warn("Exposing all the medications");
-        return ResponseEntity.ok(repository.findAll());
+        return service.findAllAsync().thenApply(ResponseEntity::ok);
     }
 
-    @GetMapping("/medications")
+    @GetMapping
     public ResponseEntity<List<Medication>> readAllMedications(Pageable page) {
         logger.info("Custom pageable");
         return ResponseEntity.ok(repository.findAll(page).getContent());
     }
 
-    @GetMapping("/medications/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Medication> readMedication(@PathVariable int id) {
         return repository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/medications")
+    @GetMapping("/search/discount")
+    public ResponseEntity<List<Medication>> readDiscountMedication(@RequestParam(defaultValue = "true") boolean state) {
+        return ResponseEntity.ok(repository.findByDiscount(state));
+    }
+
+    @PostMapping
     ResponseEntity<Medication> createMedication(@RequestBody @Valid Medication toCreate) {
         var medication = repository.save(toCreate);
         return ResponseEntity.created(URI.create("/" + medication.getId())).body(medication);
     }
 
-    @PutMapping("/medications/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<?> updateMedication(@PathVariable int id, @RequestBody @Valid Medication toUpdate) {
         if (!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -61,7 +71,7 @@ class MedicationController {
     }
 
     @Transactional
-    @PatchMapping("/medications/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<?> toggleMedication(@PathVariable int id) {
         if (!repository.existsById(id)) {
             return ResponseEntity.notFound().build();

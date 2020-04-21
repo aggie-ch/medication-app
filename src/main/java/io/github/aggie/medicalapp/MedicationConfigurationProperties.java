@@ -1,7 +1,9 @@
 package io.github.aggie.medicalapp;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 @ConfigurationProperties("medication")
 public class MedicationConfigurationProperties {
     private Template template;
