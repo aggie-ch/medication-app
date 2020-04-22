@@ -2,6 +2,7 @@ package io.github.aggie.medicalapp.logic;
 
 import io.github.aggie.medicalapp.model.MedicationGroupRepository;
 import io.github.aggie.medicalapp.model.MedicationRepository;
+import io.github.aggie.medicalapp.model.Template;
 import io.github.aggie.medicalapp.model.projection.GroupReadModel;
 import io.github.aggie.medicalapp.model.projection.GroupWriteModel;
 
@@ -18,7 +19,11 @@ public class MedicationGroupService {
     }
 
     public GroupReadModel createGroup(GroupWriteModel source) {
-        var result = repository.save(source.toGroup());
+        return createGroup(source, null);
+    }
+
+    public GroupReadModel createGroup(GroupWriteModel source, Template template) {
+        var result = repository.save(source.toGroup(template));
         return new GroupReadModel(result);
     }
 

@@ -7,6 +7,7 @@ import io.github.aggie.medicalapp.model.TemplateRepository;
 import io.github.aggie.medicalapp.model.projection.GroupMedicationWriteModel;
 import io.github.aggie.medicalapp.model.projection.GroupReadModel;
 import io.github.aggie.medicalapp.model.projection.GroupWriteModel;
+import io.github.aggie.medicalapp.model.projection.TemplateWriteModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,8 +30,8 @@ public class TemplateService {
         return repository.findAll();
     }
 
-    public Template createTemplate(final Template source) {
-        return repository.save(source);
+    public Template save(final TemplateWriteModel toSave) {
+        return repository.save(toSave.toTemplate());
     }
 
     public GroupReadModel createGroup(LocalDateTime deadline, int templateId) {
@@ -52,7 +53,7 @@ public class TemplateService {
                                             }
                                     ).collect(Collectors.toSet())
                     );
-                    return medicationGroupService.createGroup(group);
+                    return medicationGroupService.createGroup(group, template);
                 }).orElseThrow(() -> new IllegalArgumentException("Template with given id not found"));
     }
 }

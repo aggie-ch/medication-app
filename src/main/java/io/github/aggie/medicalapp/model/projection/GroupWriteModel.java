@@ -1,6 +1,7 @@
 package io.github.aggie.medicalapp.model.projection;
 
 import io.github.aggie.medicalapp.model.MedicationGroup;
+import io.github.aggie.medicalapp.model.Template;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,13 +26,14 @@ public class GroupWriteModel {
         this.medications = medications;
     }
 
-    public MedicationGroup toGroup() {
+    public MedicationGroup toGroup(Template template) {
         var result = new MedicationGroup();
         result.setName(name);
         result.setMedications(medications.stream()
                 .map(source -> source.toMedication(result))
                 .collect(Collectors.toSet())
         );
+        result.setTemplate(template);
         return result;
     }
 }
