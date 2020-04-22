@@ -5,6 +5,7 @@ import io.github.aggie.medicalapp.model.TemplateStep;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -12,7 +13,11 @@ public class TemplateWriteModel {
     @NotBlank(message = "Template's description must not be empty")
     private String description;
     @Valid
-    private List<TemplateStep> steps;
+    private List<TemplateStep> steps = new ArrayList<>();
+
+    public TemplateWriteModel() {
+        steps.add(new TemplateStep());
+    }
 
     public String getDescription() {
         return description;
