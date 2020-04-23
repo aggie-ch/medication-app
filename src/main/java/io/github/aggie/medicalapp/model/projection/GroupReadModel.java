@@ -3,6 +3,7 @@ package io.github.aggie.medicalapp.model.projection;
 import io.github.aggie.medicalapp.model.MedicationGroup;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,7 @@ public class GroupReadModel {
         name = source.getName();
         source.getMedications().stream()
                 .map(t -> t.getDeadline())
+                .filter(Objects::nonNull)
                 .max(LocalDateTime::compareTo)
                 .ifPresent(date -> deadline = date);
         medications = source.getMedications().stream()
