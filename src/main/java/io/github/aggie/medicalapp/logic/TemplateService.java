@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 public class TemplateService {
     private TemplateRepository repository;
     private MedicationGroupRepository medicationGroupRepository;
-    private MedicationConfigurationProperties config;
     private MedicationGroupService medicationGroupService;
+    private MedicationConfigurationProperties config;
 
     public TemplateService(TemplateRepository repository, MedicationGroupRepository medicationGroupRepository, MedicationGroupService medicationGroupService, MedicationConfigurationProperties config) {
         this.repository = repository;
