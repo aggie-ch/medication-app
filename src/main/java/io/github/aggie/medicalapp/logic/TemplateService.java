@@ -51,7 +51,7 @@ public class TemplateService {
                                                 medication.setDeadline(deadline.plusDays(templateStep.getDaysToDeadline()));
                                                 return medication;
                                             }
-                                    ).collect(Collectors.toSet())
+                                    ).collect(Collectors.toList())
                     );
                     return medicationGroupService.createGroup(group, template);
                 }).orElseThrow(() -> new IllegalArgumentException("Template with given id not found"));
