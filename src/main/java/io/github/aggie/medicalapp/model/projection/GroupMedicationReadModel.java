@@ -2,15 +2,13 @@ package io.github.aggie.medicalapp.model.projection;
 
 import io.github.aggie.medicalapp.model.Medication;
 
-import java.time.LocalDateTime;
-
 public class GroupMedicationReadModel {
     private String name;
-    private LocalDateTime deadline;
+    private boolean discount;
 
     public GroupMedicationReadModel(Medication source) {
         name = source.getName();
-        deadline = source.getDeadline();
+        discount = source.isDiscount();
     }
 
     public String getName() {
@@ -21,11 +19,11 @@ public class GroupMedicationReadModel {
         this.name = name;
     }
 
-    public LocalDateTime getDeadline() {
-        return deadline;
+    public boolean getDiscount() {
+        return discount;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
-        this.deadline = deadline;
+    public void setDiscount(boolean discount) {
+        this.discount = discount;
     }
 }
