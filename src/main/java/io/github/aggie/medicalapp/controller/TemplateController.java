@@ -4,6 +4,7 @@ import io.github.aggie.medicalapp.logic.TemplateService;
 import io.github.aggie.medicalapp.model.Template;
 import io.github.aggie.medicalapp.model.TemplateStep;
 import io.github.aggie.medicalapp.model.projection.TemplateWriteModel;
+import io.micrometer.core.annotation.Timed;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,6 +51,7 @@ class TemplateController {
         return "templates";
     }
 
+    @Timed(value = "template.create.group", histogram = true, percentiles = {0.5, 0.95, 0.99})
     @PostMapping("/{id}")
     public String createGroup(@ModelAttribute("template") TemplateWriteModel current,
                               Model model,

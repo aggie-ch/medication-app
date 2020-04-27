@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.List;
 
 @Controller
+@IllegalExceptionProcessing
 @RequestMapping("/groups")
 class MedicationGroupController {
     private static final Logger logger = LoggerFactory.getLogger(MedicationGroupController.class);
