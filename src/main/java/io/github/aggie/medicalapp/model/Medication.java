@@ -1,5 +1,7 @@
 package io.github.aggie.medicalapp.model;
 
+import io.github.aggie.medicalapp.model.event.MedicationEvent;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -56,8 +58,9 @@ public class Medication {
         return discount;
     }
 
-    public void setDiscount(boolean discount) {
-        this.discount = discount;
+    public MedicationEvent toggle() {
+        this.discount = !this.discount;
+        return MedicationEvent.changed(this);
     }
 
     public LocalDateTime getDeadline() {
