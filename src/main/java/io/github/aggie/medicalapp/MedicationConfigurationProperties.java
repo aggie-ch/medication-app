@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties("medication")
 public class MedicationConfigurationProperties {
-    private Template template = new Template();
+    private Template template;
 
     public Template getTemplate() {
         return template;
