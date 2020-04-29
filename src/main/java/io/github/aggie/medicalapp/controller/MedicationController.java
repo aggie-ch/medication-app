@@ -5,6 +5,7 @@ import io.github.aggie.medicalapp.model.Medication;
 import io.github.aggie.medicalapp.model.MedicationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +20,12 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/medications")
 class MedicationController {
     private static final Logger logger = LoggerFactory.getLogger(MedicationController.class);
+    private final ApplicationEventPublisher eventPublisher;
     private final MedicationRepository repository;
     private final MedicationService service;
 
-    MedicationController(MedicationRepository repository, MedicationService service) {
+    MedicationController(ApplicationEventPublisher eventPublisher, MedicationRepository repository, MedicationService service) {
+        this.eventPublisher = eventPublisher;
         this.repository = repository;
         this.service = service;
     }
@@ -76,8 +79,9 @@ class MedicationController {
         if (!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        repository.findById(id).ifPresent(m -> m.setDiscount(!m.isDiscount()));
-
+        repository.findById(id)
+                .map(Medication::toggle)
+                .ifPresent(eventPublisher::publishEvent);
         return ResponseEntity.noContent().build();
     }
 }
