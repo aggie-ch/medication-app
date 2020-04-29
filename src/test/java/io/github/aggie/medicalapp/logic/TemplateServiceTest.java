@@ -187,5 +187,11 @@ class TemplateServiceTest {
                     .anyMatch(group -> group.getTemplate() != null
                             && group.getTemplate().getId() == templateId);
         }
+
+        @Override
+        public boolean existsByName(String name) {
+            return map.values().stream()
+                    .anyMatch(group -> group.getName().equals(name));
+        }
     }
 }

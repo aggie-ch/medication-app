@@ -11,4 +11,6 @@ public interface MedicationGroupRepository {
     MedicationGroup save(MedicationGroup entity);
 
     boolean existsByDiscountIsFalseAndTemplate_Id(Integer templateId);
+
+    boolean existsByName(String name);
 }
