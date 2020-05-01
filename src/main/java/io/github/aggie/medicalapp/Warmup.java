@@ -1,15 +1,11 @@
 package io.github.aggie.medicalapp;
 
-import io.github.aggie.medicalapp.model.Medication;
-import io.github.aggie.medicalapp.model.MedicationGroup;
 import io.github.aggie.medicalapp.model.MedicationGroupRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-
-import java.util.Set;
 
 @Component
 class Warmup implements ApplicationListener<ContextRefreshedEvent> {
@@ -23,6 +19,8 @@ class Warmup implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         logger.info("Application warmup after context refreshed");
+/**     ADDING TEST MEDICATIONS TO GROUP
+ *
         final String name = "ApplicationContextEvent";
         if (!groupRepository.existsByName(name)) {
             logger.info("No required group found! Adding it!");
@@ -36,5 +34,6 @@ class Warmup implements ApplicationListener<ContextRefreshedEvent> {
             ));
             groupRepository.save(group);
         }
+        */
     }
 }
