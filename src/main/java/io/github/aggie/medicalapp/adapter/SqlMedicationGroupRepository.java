@@ -16,7 +16,7 @@ interface SqlMedicationGroupRepository extends MedicationGroupRepository, JpaRep
     boolean existsById(@Param("id") Integer id);
 
     @Override
-    @Query("from MedicationGroup m join fetch m.medications")
+    @Query("select distinct m from MedicationGroup m join fetch m.medications")
     List<MedicationGroup> findAll();
 
     @Override
